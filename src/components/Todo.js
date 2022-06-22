@@ -6,11 +6,13 @@ import Input from './Input';
 import Filter from './Filter';
 
 /* カスタムフック */
-// import useStorage from '../hooks/storage';
 import useStorage from '../hooks/storage'
+
+// import {getKey} from "../lib/util";
 
 function Todo() {
   
+  // const [items, putItems, clearItems] = useStorage();
   const [items, addItem, updateItem, clearItems] = useStorage();
   
   const [filter, setFilter] = React.useState('ALL');
@@ -22,10 +24,18 @@ function Todo() {
   });
   
   const handleCheck = checked => {
+    // const newItems = items.map(item => {
+      //   if (item.key === checked.key) {
+      //     item.done = !item.done;
+      //   }
+      //   return item;
+      // });
+      // putItems(newItems);
     updateItem(checked);
   };
   
   const handleAdd = text => {
+    // putItems([...items, { key: getKey(), text, done: false }]);
     addItem({ text, done: false });
   };
   
