@@ -20,4 +20,9 @@ async function getTodoItems() {
     const todoList = todoSnapshot.docs.map(doc => ({ ...doc.data(), key: doc.id }))
     return todoList
 }
-export { getTodoItems}
+async function addNewTodoItem(item) {
+    const todoCol = collection(db, 'todos')
+    const ref = (await addDoc(todoCol, item)).id
+    return ref
+}
+export { getTodoItems, addNewTodoItem }
