@@ -1,32 +1,37 @@
 import { useState, useEffect } from 'react';
-
+import { getTodoItems, addNewTodoItem, updateTodoItem, clearAllTodoItem } from '../lib/firebase';
 const STORAGE_KEY = 'itss-todo';
 
 function useStorage() {
   const [items, setItems] = useState([]);
-  
-  useEffect(() => {
-    const data = localStorage.getItem(STORAGE_KEY);
-    
-    if (!data) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
-    } else {
-      setItems(JSON.parse(data));
-    }
-  }, []);
 
+  useEffect(() => {
+    getTodoItems().then(result => setItems(result))
+  }, []);
   const putItems = items => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    setItems  (items);
+    let newItem = items.pop()
+    addNewTodoItem(newItem).then(result => setItems([...items, { ...newItem, key: result }]))
   };
 
   const clearItems = () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+    clearAllTodoItem(items)
     setItems([]);
-    
-  };
 
-  return [items, putItems, clearItems];
+  };
+  const updateItem = (id) => {
+    let uI = undefined
+    let tmpItems = items.map(item => {
+      if (item.key == id) {
+        item.done = !item.done
+        uI = item
+      }
+      return item
+    })
+    updateTodoItem(uI)
+    setItems([...tmpItems])
+  }
+
+  return [items, putItems, updateItem, clearItems];
 }
 
 export default useStorage;
