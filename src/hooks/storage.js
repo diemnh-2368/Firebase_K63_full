@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getTodoItems, addNewTodoItem, updateTodoItem } from '../lib/firebase';
+import { getTodoItems, addNewTodoItem, updateTodoItem, clearAllTodoItem } from '../lib/firebase';
 const STORAGE_KEY = 'itss-todo';
 
 function useStorage() {
@@ -14,7 +14,7 @@ function useStorage() {
   };
 
   const clearItems = () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+    clearAllTodoItem(items)
     setItems([]);
 
   };

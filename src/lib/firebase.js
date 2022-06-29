@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { addDoc, collection, doc, getDocs, getFirestore, updateDoc } from "firebase/firestore/lite";
+import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, updateDoc } from "firebase/firestore/lite";
 const firebaseConfig = {
     apiKey: "AIzaSyDMCORltiR4ZfwnllO_BmE_86eD65Hwr0c",
     authDomain: "fir-sample-ec7dc.firebaseapp.com",
@@ -24,7 +24,12 @@ async function addNewTodoItem(item) {
     const ref = (await addDoc(todoCol, item)).id
     return ref
 }
-async function updateTodoItem(item){
-    await updateDoc(doc(db,"todos",item.key),{text:item.text,done:item.done})
+async function updateTodoItem(item) {
+    await updateDoc(doc(db, "todos", item.key), { text: item.text, done: item.done })
 }
-export { getTodoItems, addNewTodoItem, updateTodoItem }
+
+async function clearAllTodoItem(items) {
+    for(let i = 0; i < items.length; i++)
+        await deleteDoc(doc(db, "todos", items[i].key))
+}
+export { getTodoItems, addNewTodoItem, updateTodoItem, clearAllTodoItem }
