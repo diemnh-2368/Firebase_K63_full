@@ -9,11 +9,11 @@ import Filter from './Filter';
 import useStorage from '../hooks/storage';
 
 /* ライブラリ */
-import {getKey} from "../lib/util";
+import { getKey } from "../lib/util";
 
 function Todo() {
-  const [items, putItems, clearItems] = useStorage();
-  
+  const [items, putItems, updateItem, clearItems] = useStorage();
+
   const [filter, setFilter] = React.useState('ALL');
 
   const displayItems = items.filter(item => {
@@ -21,21 +21,15 @@ function Todo() {
     if (filter === 'TODO') return !item.done;
     if (filter === 'DONE') return item.done;
   });
-  
+
   const handleCheck = checked => {
-    const newItems = items.map(item => {
-      if (item.key === checked.key) {
-        item.done = !item.done;
-      }
-      return item;
-    });
-    putItems(newItems);
+    updateItem(checked.key)
   };
-  
+
   const handleAdd = text => {
     putItems([...items, { key: getKey(), text, done: false }]);
   };
-  
+
   const handleFilterChange = value => setFilter(value);
 
   return (
@@ -54,7 +48,7 @@ function Todo() {
         value={filter}
       />
       {displayItems.map(item => (
-        <TodoItem 
+        <TodoItem
           key={item.key}
           item={item}
           onCheck={handleCheck}
